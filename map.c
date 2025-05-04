@@ -14,8 +14,8 @@ int mark_bsq_on_map(ProcessingContext *ctx) {
         size_t start_x = bsq->x - bsq->size;
         size_t end_x = bsq->x;
     
-        for (size_t y = start_y; y <= end_y; ++y) {
-            for (size_t x = start_x; x <= end_x; ++x) {
+        for (size_t y = start_y; y < end_y; ++y) {
+            for (size_t x = start_x; x < end_x; ++x) {
                 size_t map_index = y * (ctx->cols + NEW_LINE) + x;
                 map[map_index] = ctx->symbols[FULL];
             }
