@@ -14,7 +14,7 @@ int parse_header(ParsingContext *ctx) {
    
     result	= fscanf(
         ctx->fp,
-        "%d%c%c%c%c",
+        "%zu%c%c%c%c",
         &ctx->rows,
         &ctx->symbols[EMPTY],
         &ctx->symbols[OBSTACLE],
