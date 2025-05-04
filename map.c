@@ -21,7 +21,7 @@ int mark_bsq_on_map(ProcessingContext *ctx) {
             }
         }
     }
-
+    return 1;
 }
 
 int print_map(ProcessingContext *ctx) {
