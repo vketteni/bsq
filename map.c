@@ -25,6 +25,6 @@ int mark_bsq_on_map(ProcessingContext *ctx) {
 }
 
 int print_map(ProcessingContext *ctx) {
-    fprintf(stdout, ctx->map);
+    fprintf(stdout, "%s", ctx->map);
     return 1;
 }
