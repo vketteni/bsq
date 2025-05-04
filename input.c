@@ -52,7 +52,7 @@ int parse_body(ParsingContext *ctx) {
 }
 
 int line_format_valid(ParsingContext *ctx) {
-    return ctx->line_len - 1 == ctx->cols; // minus one because new line is excluded
+    return (size_t)ctx->line_len - 1 == ctx->cols; // minus one because new line is excluded
 }
 
 int line_to_map_append(ParsingContext *ctx) {

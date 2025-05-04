@@ -12,14 +12,14 @@
 
 // Shared types
 typedef struct DPMatrix {
-    int **table;
-    int rows;
-    int cols;
+    size_t **table;
+    size_t rows;
+    size_t cols;
 } DPMatrix;
 
 typedef struct Square {
-    int x;
-    int y;
+    size_t x;
+    size_t y;
     size_t size;
 } Square;
 

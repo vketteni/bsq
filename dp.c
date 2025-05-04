@@ -5,7 +5,7 @@
 DPMatrix *create_dp_matrix(int rows, int cols) {
     DPMatrix *dp = (DPMatrix *)calloc(1, sizeof(DPMatrix));
     
-    dp->table = (int **)calloc_2d_array(rows, cols, sizeof(int));
+    dp->table = (size_t **)calloc_2d_array(rows, cols, sizeof(size_t));
     dp->rows = rows;
     dp->cols = cols;
     return dp; 
