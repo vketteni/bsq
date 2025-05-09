@@ -33,29 +33,31 @@ int parse_body(ParsingContext *ctx) {
     ctx->line = NULL;
     ctx->line_cap = 0;
     ctx->line_len = 0;
-    firstLine = true;
-    while ((ctx->line_len = getline(&ctx->line, &ctx->line_cap, ctx->fp)) > 0) {
-        if (firstLine) {
-            ctx->cols = ctx->line_len - 1; // minus one because new line is excluded
-            firstLine = false;
-        }
-        if (!line_format_valid(ctx)) {
+    for (size_t i = 0; i < ctx->rows; ++i) {
+        ctx->line_len = getline(&ctx->map[i], &ctx->line_cap, ctx->fp)
+        if (ctx->line_len < 0 || !valid_line_format(ctx, i))
             return 0;
-        }
-        if (!line_to_map_append(ctx)) {
-            return 0;
-        }
     }
-    free(ctx->line);
-    ctx->line = NULL;
     return 1;
 }
 
-int line_format_valid(ParsingContext *ctx) {
-    return (size_t)ctx->line_len - 1 == ctx->cols; // minus one because new line is excluded
+int valid_line_format(ParsingContext *ctx, size_t line_index) {
+    if (line_index == 0) {
+        ctx->cols = ctx->line_len - 1; // minus one because new line is excluded
+    }
+    char *line = ctx->map[line_index];
+    size_t i = 0; 
+    while (line[i] != '\n' || line[i] != '\0') {
+        if (line[i] == ctx->symbols[EMPTY] || line[i] == ctx->symbols[OBSTACLE]) {
+            ++i;
+            continue;
+        } 
+        return 0;
+    }
+    return i == ctx->cols;
 }
 
-int line_to_map_append(ParsingContext *ctx) {
+int append_line_to_map(ParsingContext *ctx) {
     char    *tmp;
     
     tmp = ctx->map ? ft_strcat(ctx->map, ctx->line) : ft_strcat("", ctx->line);

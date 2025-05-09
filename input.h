@@ -10,8 +10,8 @@ int parse_header(ParsingContext *ctx);
 int parse_body(ParsingContext *ctx);
 FILE *open_input(const char *file_path);
 
-int line_format_valid(ParsingContext *ctx);
-int line_to_map_append(ParsingContext *ctx);
+int valid_line_format(ParsingContext *ctx, size_t line_index);
+int append_line_to_map(ParsingContext *ctx);
 
 #endif
 

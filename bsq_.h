@@ -17,17 +17,6 @@ typedef struct DPMatrix {
     size_t cols;
 } DPMatrix;
 
-typedef struct BSQ {
-    char full;
-    char empty;
-    char obstacle;
-    char **map;
-    int width;
-    int length;
-    DPMatrix *dp_matrix;
-} BSQ;
-
-
 typedef struct Square {
     size_t x;
     size_t y;

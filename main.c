@@ -38,6 +38,7 @@ int bsq(const char *file_path) {
     CHECK( fill_dp_table_and_track_bsq(&processing_ctx) );
     CHECK( mark_bsq_on_map(&processing_ctx) );
     CHECK( print_map(&processing_ctx) );
+
     free_parsing_context(&parsing_ctx);
     free_processing_context(&processing_ctx);
     return 1;
