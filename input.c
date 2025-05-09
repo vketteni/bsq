@@ -8,53 +8,53 @@ FILE *open_input(const char *file_path) {
 	return file_path ? fopen(file_path, "r") : stdin;
 }
 
-int parse_header(ParsingContext *ctx) {
+int parse_header(FILE *fp, BsqContext *ctx) {
     char end;
     int	result;
    
-    result	= fscanf(
-        ctx->fp,
-        "%zu%c%c%c%c",
-        &ctx->rows,
-        &ctx->symbols[EMPTY],
-        &ctx->symbols[OBSTACLE],
-        &ctx->symbols[FULL],
+    result = fscanf(
+        fp,
+        "%d%c%c%c%c",
+        &ctx->map_height,
+        &ctx->empty,
+        &ctx->obstacle,
+        &ctx->full,
         &end
     );
-    if (result != 5 || end != '\n' || ctx->rows <= 0) {
+    if (result != 5 || end != '\n' || ctx->map_height <= 0) {
         return 0;
     }
     return 1;
 }
 
-int parse_body(ParsingContext *ctx) {
-    bool firstLine;
-
-    ctx->line = NULL;
-    ctx->line_cap = 0;
-    ctx->line_len = 0;
-    for (size_t i = 0; i < ctx->rows; ++i) {
-        ctx->line_len = getline(&ctx->map[i], &ctx->line_cap, ctx->fp)
-        if (ctx->line_len < 0 || !valid_line_format(ctx, i))
+int parse_body(FILE *fp, char **bsq_map, BsqContext *ctx) {
+    int line_cap = 0;
+    int line_len = 0;
+    for (int i = 0; i < ctx->map_height; ++i) {
+        line_len = getline(&bsq_map[i], &line_cap, fp)
+        if (line_len < 0) {
             return 0;
+	}
+	if (i == 0) {
+            ctx->map_width = line_len - 1; // minus one because new line is excluded
+	}
+        if (!valid_format(map[i], ctx)) {
+            return 0;
+        }
     }
     return 1;
-}
+u
 
-int valid_line_format(ParsingContext *ctx, size_t line_index) {
-    if (line_index == 0) {
-        ctx->cols = ctx->line_len - 1; // minus one because new line is excluded
-    }
-    char *line = ctx->map[line_index];
-    size_t i = 0; 
-    while (line[i] != '\n' || line[i] != '\0') {
-        if (line[i] == ctx->symbols[EMPTY] || line[i] == ctx->symbols[OBSTACLE]) {
+int valid_line_format(char *line, BsqContext *ctx) {
+    int i = 0; 
+    while (line[i] != '\n' && line[i] != '\0') {
+        if (line[i] == ctx->empty || line[i] == ctx->obstacle) {
             ++i;
             continue;
         } 
         return 0;
     }
-    return i == ctx->cols;
+    return i == ctx->width_map;
 }
 
 int append_line_to_map(ParsingContext *ctx) {

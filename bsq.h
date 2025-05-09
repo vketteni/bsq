@@ -17,15 +17,13 @@ typedef struct DPMatrix {
     size_t cols;
 } DPMatrix;
 
-typedef struct BSQ {
+typedef struct BsqContext {
     char full;
     char empty;
     char obstacle;
-    char **map;
-    int width;
-    int length;
-    DPMatrix *dp_matrix;
-} BSQ;
+    int width_map;
+    int height_map;
+} BsqContext;
 
 
 typedef struct Square {
