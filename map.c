@@ -30,10 +30,11 @@ int mark_on_map(char **map, int **squares, BsqContext *ctx) {
     int start_x = ctx->bsq_x - ctx->bsq_size;
     int end_x = ctx->bsq_x;
 
-    for (size_t y = start_y; y < end_y; ++y) {
-        for (size_t x = start_x; x < end_x; ++x)
+    for (int y = start_y; y < end_y; ++y) {
+        for (int x = start_x; x < end_x; ++x)
             map[y][x] = ctx->full;
     }
+    return 1;
 }
 
 int print_map(char **map, BsqContext *ctx) {

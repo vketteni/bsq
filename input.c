@@ -1,8 +1,7 @@
-#include "input.h"
-#include "bsq.h"
-#include "utils.h"
 #include <stdlib.h>
 #include <stdbool.h>
+
+#include "bsq.h"
 
 FILE *open_input(const char *file_path) {
 	return file_path ? fopen(file_path, "r") : stdin;
@@ -28,17 +27,17 @@ int parse_header(FILE *fp, BsqContext *ctx) {
 }
 
 int parse_body(FILE *fp, char **bsq_map, BsqContext *ctx) {
-    int line_cap = 0;
+    size_t line_cap = 0;
     int line_len = 0;
     for (int i = 0; i < ctx->map_height; ++i) {
-        line_len = getline(&bsq_map[i], &line_cap, fp)
+        line_len = getline(&bsq_map[i], &line_cap, fp);
         if (line_len < 0) {
             return 0;
 	}
 	if (i == 0) {
             ctx->map_width = line_len - 1; // minus one because new line is excluded
 	}
-        if (!valid_format(bsq_map[i], ctx)) {
+        if (!valid_line_format(bsq_map[i], ctx)) {
             return 0;
         }
     }
@@ -54,6 +53,6 @@ int valid_line_format(char *line, BsqContext *ctx) {
         } 
         return 0;
     }
-    return i == ctx->width_map;
+    return (i == ctx->map_width);
 }
 

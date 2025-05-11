@@ -15,24 +15,24 @@ int main(int argc, char **argv) {
 int bsq(const char *file_path) {
     BsqContext ctx = {0};    
     FILE *fp;
-    char **bsq_map;
+    char **map;
     int **squares;
 
     CHECK( fp = open_input(file_path) );
     CHECK( parse_header(fp, &ctx) );
-    CHECK( init_map(&bsq_map, &ctx) );
-    CHECK( parse_body(fp, &bsq_map, &ctx) );
-    CHECK( init_squares(&squares, &ctx);
+    CHECK( init_map(&map, &ctx) );
+    CHECK( parse_body(fp, map, &ctx) );
+    CHECK( init_squares(&squares, &ctx) );
     CHECK( find_bsq(map, squares, &ctx) );
     CHECK( mark_on_map(map, squares, &ctx) );
     CHECK( print_map(map, &ctx) );
 
-    free_bsq(fp, bsq_map, squares, &ctx);
+    free_bsq(fp, map, squares, &ctx);
     return 1;
     
     error:
         fprintf(stderr, "map error\n");
-        free_bsq(fp, bsq_map, squares);
+        free_bsq(fp, map, squares, &ctx);
         return 0;
 }
 
