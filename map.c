@@ -1,30 +1,43 @@
-#include "map.h"
 #include "bsq.h"
+
 #include <stdio.h> 
 
-int mark_bsq_on_map(ProcessingContext *ctx) {
-    char *map = ctx->map;
-    DPMatrix *dp = ctx->dp;
-    if (!dp || !map)
+int init_squares(int ***squares_ptr, BsqContext *ctx) {
+    if (!(ctx->map_height > 0 && ctx->map_width > 0))
         return 0;
-    Square *bsq = &ctx->bsq;
-    if (bsq->x >= bsq->size && bsq->y >= bsq->size) {
-        size_t start_y = bsq->y - bsq->size;
-        size_t end_y = bsq->y;
-        size_t start_x = bsq->x - bsq->size;
-        size_t end_x = bsq->x;
-    
-        for (size_t y = start_y; y < end_y; ++y) {
-            for (size_t x = start_x; x < end_x; ++x) {
-                size_t map_index = y * (ctx->cols + NEW_LINE) + x;
-                map[map_index] = ctx->symbols[FULL];
-            }
-        }
-    }
+    *squares_ptr = (int **)calloc_2d_array(ctx->map_height, ctx->map_width, sizeof(int *));
+    if (!(*squares_ptr))
+        return 0;
+    return 1;
+}
+int init_map(char ***map_ptr, BsqContext *ctx) {
+    if (!(ctx->map_height > 0))
+        return 0;
+    *map_ptr = (char **)calloc(ctx->map_height, sizeof(char *));
+    if (!(*map_ptr))
+        return 0;
     return 1;
 }
 
-int print_map(ProcessingContext *ctx) {
-    fprintf(stdout, "%s", ctx->map);
+int mark_on_map(char **map, int **squares, BsqContext *ctx) {
+    if (!map || !squares)
+        return 0;
+    if (ctx->bsq_x < ctx->bsq_size && ctx->bsq_y < ctx->bsq_size)
+        return 0;
+
+    int start_y = ctx->bsq_y - ctx->bsq_size;
+    int end_y = ctx->bsq_y;
+    int start_x = ctx->bsq_x - ctx->bsq_size;
+    int end_x = ctx->bsq_x;
+
+    for (size_t y = start_y; y < end_y; ++y) {
+        for (size_t x = start_x; x < end_x; ++x)
+            map[y][x] = ctx->full;
+    }
+}
+
+int print_map(char **map, BsqContext *ctx) {
+    for (int i = 0; i < ctx->map_height; ++i)
+        fprintf(stdout, "%s", map[i]);
     return 1;
 }

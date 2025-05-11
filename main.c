@@ -1,21 +1,6 @@
 #include <stdlib.h>
 
 #include "bsq.h"
-#include "input.h"
-#include "dp.h"
-#include "map.h"
-
-/*
-main.c
-└── bsq(file_path)
-    ├── open_input()
-    ├── parse_header()
-    ├── parse_body()
-    │   └── fill map & dp table
-    ├── find_largest_square()
-    ├── mark_square_on_map()
-    └── print_map()
-*/
 
 int main(int argc, char **argv) {
 	if (argc == 1)
@@ -28,43 +13,26 @@ int main(int argc, char **argv) {
 }
 
 int bsq(const char *file_path) {
-    ParsingContext  parsing_ctx = {0};
-    ProcessingContext processing_ctx = {0};
+    BsqContext ctx = {0};    
+    FILE *fp;
+    char **bsq_map;
+    int **squares;
 
-    CHECK( parsing_ctx.fp = open_input(file_path) );
-    CHECK( parse_header(&parsing_ctx) );
-    CHECK( parse_body(&parsing_ctx) ); // produces valid map 
-    CHECK( init_processing_context(&processing_ctx, &parsing_ctx) );
-    CHECK( fill_dp_table_and_track_bsq(&processing_ctx) );
-    CHECK( mark_bsq_on_map(&processing_ctx) );
-    CHECK( print_map(&processing_ctx) );
+    CHECK( fp = open_input(file_path) );
+    CHECK( parse_header(fp, &ctx) );
+    CHECK( init_map(&bsq_map, &ctx) );
+    CHECK( parse_body(fp, &bsq_map, &ctx) );
+    CHECK( init_squares(&squares, &ctx);
+    CHECK( find_bsq(map, squares, &ctx) );
+    CHECK( mark_on_map(map, squares, &ctx) );
+    CHECK( print_map(map, &ctx) );
 
-    free_parsing_context(&parsing_ctx);
-    free_processing_context(&processing_ctx);
+    free_bsq(fp, bsq_map, squares, &ctx);
     return 1;
     
     error:
         fprintf(stderr, "map error\n");
-        free_parsing_context(&parsing_ctx);
-        free_processing_context(&processing_ctx);
+        free_bsq(fp, bsq_map, squares);
         return 0;
 }
 
-void free_parsing_context(ParsingContext *ctx) {
-    if (ctx->fp && ctx->fp != stdin) {
-        fclose(ctx->fp);
-    }
-    if (ctx->line) {
-        free(ctx->line);
-    }
-}
-
-void free_processing_context(ProcessingContext *ctx) {
-    if (ctx->dp) {
-        free_dp_matrix(ctx->dp);
-    }
-
-    if (ctx->map) {
-        free(ctx->map);
-    }
-}

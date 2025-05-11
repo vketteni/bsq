@@ -38,12 +38,12 @@ int parse_body(FILE *fp, char **bsq_map, BsqContext *ctx) {
 	if (i == 0) {
             ctx->map_width = line_len - 1; // minus one because new line is excluded
 	}
-        if (!valid_format(map[i], ctx)) {
+        if (!valid_format(bsq_map[i], ctx)) {
             return 0;
         }
     }
     return 1;
-u
+}
 
 int valid_line_format(char *line, BsqContext *ctx) {
     int i = 0; 
@@ -56,15 +56,4 @@ int valid_line_format(char *line, BsqContext *ctx) {
     }
     return i == ctx->width_map;
 }
-
-int append_line_to_map(ParsingContext *ctx) {
-    char    *tmp;
-    
-    tmp = ctx->map ? ft_strcat(ctx->map, ctx->line) : ft_strcat("", ctx->line);
-    if (!tmp) return 0;
-    free(ctx->map);
-    ctx->map = tmp;
-    return 1;
-}
-
 
