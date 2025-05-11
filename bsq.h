@@ -1,21 +1,8 @@
 #ifndef BSQ_H
 #define BSQ_H
 
-#include <stdio.h>  // Needed for FILE
-
-// Constants
-#define EMPTY 0
-#define FULL 1
-#define OBSTACLE 2
-#define EXTRA_BORDER 1
-#define NEW_LINE 1
-
-// Shared types
-typedef struct DPMatrix {
-    size_t **table;
-    size_t rows;
-    size_t cols;
-} DPMatrix;
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct BsqContext {
     char full;
@@ -23,39 +10,29 @@ typedef struct BsqContext {
     char obstacle;
     int width_map;
     int height_map;
+    int bsq_x; // Lower left corner
+    int bsq_y; // Lower left corner
+    int bsq_size; // Lower left corner
 } BsqContext;
 
-
-typedef struct Square {
-    size_t x;
-    size_t y;
-    size_t size;
-} Square;
-
-typedef struct ParsingContext {
-    FILE *fp;
-    char *line;
-    ssize_t line_len;
-    size_t line_cap;
-    size_t rows;
-    size_t cols;
-    char **map;
-    char symbols[3]; // empty, full, obstacle
-} ParsingContext;
-
-typedef struct ProcessingContext {
-    size_t rows;
-    size_t cols;
-    char *map;
-    DPMatrix *dp;
-    Square bsq;
-    char symbols[3]; // copy from parsing
-} ProcessingContext;
-
-// Main bsq function
+// Would be Interface 
 int bsq(const char *file_path);
-void free_parsing_context(ParsingContext *ctx);
-void free_processing_context(ProcessingContext *ctx);
+
+// Input
+FILE *open_input(const char *file_path);
+int parse_header(FILE *fp, BsqContext *ctx);
+int valid_line_format(char *line, BsqContext *ctx);
+int parse_body(FILE *fp, char **map, BsqContext *ctx);
+// Map
+int init_map(char **map, BsqContext *ctx);
+int find_bsq(char **map, int **squares, BsqContest *ctx);
+int mark_on_map(char **map, int **squares, BsqContext *ctx);
+int print_map(char **map);
+// Exit
+void cleanup(char **map, int **squares);
+// Utils
+void free_2d_array(void **arr_2d, size_t rows);
+int ft_min(int a, int b);
 
 // Error checking macro
 #define CHECK(x) do { if (!(x)) goto error; } while (0)
