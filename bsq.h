@@ -25,7 +25,6 @@ int valid_line_format(char *line, BsqContext *ctx);
 int parse_body(FILE *fp, char **map, BsqContext *ctx);
 // Map
 int init_map(char ***map_ptr, BsqContext *ctx);
-int init_squares(int ***squares_ptr, BsqContext *ctx);
 int find_bsq(char **map, BsqContext *ctx);
 int mark_on_map(char **map, BsqContext *ctx);
 int print_map(char **map, BsqContext *ctx);
