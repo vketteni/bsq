@@ -21,7 +21,6 @@ int bsq(const char *file_path);
 // Input
 FILE *open_input(const char *file_path);
 int parse_header(FILE *fp, BsqContext *ctx);
-int valid_line_format(char *line, BsqContext *ctx);
 int parse_body(FILE *fp, char **map, BsqContext *ctx);
 // Map
 int init_map(char ***map_ptr, BsqContext *ctx);
@@ -31,6 +30,8 @@ int print_map(char **map, BsqContext *ctx);
 // Exit
 void free_bsq(FILE *fp, char **map, BsqContext *ctx);
 // Utils
+int valid_line_format(char *line, BsqContext *ctx);
+int valid_header(BsqContext *ctx);
 int ft_min(int a, int b);
 
 // Error checking macro

@@ -51,10 +51,16 @@ int parse_header(FILE *fp, BsqContext *ctx) {
         &ctx->full,
         &end
     );
-    if (result != 5 || end != '\n' || ctx->map_height <= 0) {
+    if (!valid_header(ctx) || result != 5 || end != '\n') {
         return 0;
     }
     return 1;
+}
+
+int valid_header(BsqContext *ctx) {
+    return ctx->map_height > 0
+        && (ctx->full != ctx->empty && ctx->full != ctx->obstacle
+            && ctx->empty != ctx->obstacle);
 }
 
 int parse_body(FILE *fp, char **map, BsqContext *ctx) {
@@ -88,7 +94,17 @@ int valid_line_format(char *line, BsqContext *ctx) {
 }
 
 int find_bsq(char **map, BsqContext *ctx) {
-    int squares[ctx->map_height][ctx->map_width];
+    int **squares = (int **)malloc(ctx->map_height * sizeof(int *));
+    if (!squares) return 0;
+    
+    for (int i = 0; i < ctx->map_height; ++i) {
+        squares[i] = (int *)malloc(ctx->map_width * sizeof(int));
+        if (!squares[i]) {
+            for (int k = 0; k < i; ++k) free(squares[k]);
+            free(squares);
+            return 0;
+        }
+    }
 
     for (int i = 0; i < ctx->map_height; ++i) {
         for (int j = 0; j < ctx->map_width; ++j) {
@@ -112,6 +128,11 @@ int find_bsq(char **map, BsqContext *ctx) {
             }
         }
     }
+    
+    for (int i = 0; i < ctx->map_height; ++i) {
+        free(squares[i]);
+    }
+    free(squares);
     return 1;
 }
 
